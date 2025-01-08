@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <style>
+        .available-room {
+            background-color: #d4edda;
+            /* Example background color for available rooms */
+        }
+
+        .unallocated-student {
+            background-color: #f8d7da;
+            /* Example background color for unallocated students */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #343a40 !important;
+            border-bottom: 1px solid #343a40;
+        }
+
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            padding-top: 60px;
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .sidebar-heading {
+            font-size: 1.2rem;
+            padding: 1rem;
+            text-align: center;
+            background-color: #212529;
+        }
+
+        .nav-link {
+            color: #adb5bd;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .section {
+            display: none;
+            /* Hide all sections by default */
+            margin-top: 20px;
+        }
+
+        .content {
+            margin-left: 250px;
+            /* Width of sidebar */
+            padding-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-heading">Menu</h2>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#student-details" onclick="showSection('student-details')">Student
+                    Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#room-details" onclick="showSection('room-details')">Room Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#room-allocation" onclick="showSection('room-allocation')">Room Allocation</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#application-verification"
+                    onclick="showSection('application-verification')">Application Verification</a>
+            </li>
+
+
+            <!-- Add more navigation links here -->
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="container">
+            <h1 class="mt-4">Welcome to the Admin Dashboard</h1>
+
+            <!-- Student Details Section -->
+            <section id="student-details" class="section">
+                <h2>Student Details</h2>
+                <!-- Table to display student details -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Date of Allotement</th>
+                            <th>Room No.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Student details will be dynamically added here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="room-details" class="section">
+                <h2>Room Details</h2>
+                <!-- Table to display room details -->
+                <table class="table table-bordered" id="room-table">
+                    <thead>
+                        <tr>
+                            <th>Room Number</th>
+                            <th>Capacity</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Room details will be dynamically added here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Room Allocation Section -->
+            <!-- Room Allocation Section -->
+            <section id="room-allocation" class="section">
+                <h2>Room Allocation</h2>
+                <!-- Room allocation form -->
+                <form id="allocation-form">
+                    <div class="form-group">
+                        <label for="student-select">Select Student:</label>
+                        <select class="form-control" id="student-select" required>
+                            <!-- Student options will be dynamically added here -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="room-select">Select Room:</label>
+                        <select class="form-control" id="room-select" required>
+                            <!-- Room options will be dynamically added here -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Allocate Room</button>
+                </form>
+            </section>
+
+            <!-- Application Verification Section -->
+            <section id="application-verification" class="section">
+                <h2>Application Verification</h2>
+                <!-- Table to display application verification data -->
+                <table class="table table-bordered" id="application-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>SGPA</th>
+                            <th>Hostel Preference</th>
+                            <th>Photo</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="application-table-body">
+                        <!-- Application verification data will be dynamically added here -->
+                    </tbody>
+                </table>
+            </section>
+
+
+            <!-- Add more sections here -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function (section) {
+                section.style.display = 'none';
+            });
+
+            // Show the selected section
+            var selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+
+            // Fetch student data only if the student details section is selected
+            if (sectionId === 'student-details') {
+                fetchStudentData();
+            }
+
+            if (sectionId === 'room-details') {
+                $.ajax({
+                    url: "/api/rooms",
+                    method: "GET",
+                    success: function (response) {
+                        // Once data is fetched successfully, render it in the room details section
+                        renderRoomData(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching room data:", error);
+                    }
+                });
+            }
+
+
+            if (sectionId === 'room-allocation') {
+
+                $.ajax({
+                    url: "/api/rooms",
+                    method: "GET",
+                    success: function (response) {
+                        // Once data is fetched successfully, render room options in the form
+                        renderRoomOptions(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching room data:", error);
+                    }
+                });
+                fetchStudentOptions();
+
+                // Frontend AJAX request to handle room allocation
+                $("#allocation-form").submit(function (event) {
+                    // Prevent default form submission
+                    event.preventDefault();
+
+
+                    // Get selected student and room IDs from the form
+                    var studentId = $("#student-select").val();
+                    var roomId = $("#room-select").val();
+
+                    // Send AJAX request to the backend to allocate the room
+                    $.ajax({
+                        url: "/api/allocate-room",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ studentId: studentId, roomId: roomId }),
+                        success: function (response) {
+                            // Room allocation successful, display a success message
+                            alert("Room allocated successfully!");
+                        },
+                        error: function (xhr, status, error) {
+                            // Error handling
+                            console.error("Error allocating room:", error);
+                            alert("Failed to allocate room. Please try again later.");
+                        }
+                    });
+                });
+
+            }
+
+            if (sectionId === 'application-verification') {
+                fetchApplicationVerificationData();
+            }
+
+        }
+
+        function renderRoomOptions(rooms) {
+            var roomSelect = $("#room-select");
+            roomSelect.empty(); // Clear existing options
+
+            // Add a default option
+            $("<option>").val("").text("Select Room").appendTo(roomSelect);
+
+            // Loop through each room and create an option element
+            rooms.forEach(function (room) {
+                $("<option>").val(room.room_id).text("Room " + room.room_id).appendTo(roomSelect);
+            });
+        }
+
+        // Function to fetch and render student options
+        function fetchStudentOptions() {
+            $.ajax({
+                url: "/api/students",
+                method: "GET",
+                success: function (response) {
+                    // Once data is fetched successfully, render student options
+                    renderStudentOptions(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching student data:", error);
+                }
+            });
+        }
+
+        // Function to render student options in the select element
+        function renderStudentOptions(students) {
+            var studentSelect = $("#student-select");
+            studentSelect.empty(); // Clear existing options
+
+            // Add a default option
+            $("<option>").val("").text("Select Student").appendTo(studentSelect);
+
+            // Loop through each student and create an option element
+            students.forEach(function (student) {
+                $("<option>").val(student.student_id).text(student.student_name).appendTo(studentSelect);
+            });
+        }
+
+        // Call fetchStudentOptions function when the room allocation section is shown
+
+
+
+        // Function to render room data in the room details section
+        function renderRoomData(rooms) {
+            // Get the table body where room details will be appended
+            var tableBody = $("#room-table tbody");
+
+            // Clear existing content
+            tableBody.empty();
+
+            // Loop through each room and create a table row
+            rooms.forEach(function (room) {
+                var row = $("<tr>");
+                $("<td>").text(room.room_number).appendTo(row);
+                $("<td>").text(room.capacity).appendTo(row);
+                $("<td>").text(room.allotted ? "Occupied" : "Available").appendTo(row);
+
+                if (!room.allotted) {
+                    row.addClass("available-room");
+                }
+                tableBody.append(row);
+            });
+        }
+
+        function fetchStudentData() {
+            // Frontend AJAX request to fetch student data
+            $.ajax({
+                url: "/api/students",
+                method: "GET",
+                success: function (response) {
+                    // Once data is fetched successfully, render it in the student section
+                    renderStudentData(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching student data:", error);
+                }
+            });
+        }
+
+        function renderStudentData(students) {
+            // Get the tbody element where we'll append student data
+            var studentTableBody = document.getElementById("student-table-body");
+
+            // Clear existing content in the table body
+            studentTableBody.innerHTML = "";
+
+            // Loop through each student and create a row in the table
+            students.forEach(function (student) {
+                // Create a new table row
+                var row = document.createElement("tr");
+
+                // Create table data cells for each student attribute
+                var idCell = document.createElement("td");
+                idCell.textContent = student.student_id;
+                row.appendChild(idCell);
+
+                var nameCell = document.createElement("td");
+                nameCell.textContent = student.student_name;
+                row.appendChild(nameCell);
+
+                var emailCell = document.createElement("td");
+                emailCell.textContent = student.student_email;
+                row.appendChild(emailCell);
+
+                var departmentCell = document.createElement("td");
+                departmentCell.textContent = student.student_department;
+                row.appendChild(departmentCell);
+
+                var yearCell = document.createElement("td");
+                yearCell.textContent = student.student_year;
+                row.appendChild(yearCell);
+
+                var dateOfAllotmentCell = document.createElement("td");
+                dateOfAllotmentCell.textContent = student.updated_at; // Assuming you have this property in your student object
+                row.appendChild(dateOfAllotmentCell);
+
+                var roomNumberCell = document.createElement("td");
+                roomNumberCell.textContent = student.room_id;
+                row.appendChild(roomNumberCell);
+
+
+
+                // Append the row to the table body
+                studentTableBody.appendChild(row);
+            });
+        }
+
+
+        function fetchApplicationVerificationData() {
+            $.ajax({
+                url: "/api/provisional-applications",
+                method: "GET",
+                success: function (applications) {
+                    // Once data is fetched successfully, render it in the application verification section
+                    renderApplicationVerificationData(applications);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching application verification data:", error);
+                }
+            });
+        }
+
+        // Function to render application verification data in the table
+        function renderApplicationVerificationData(applications) {
+            // Get the tbody element where application verification data will be appended
+            var applicationTableBody = document.getElementById("application-table-body");
+
+            // Clear existing content in the table body
+            applicationTableBody.innerHTML = "";
+
+            // Loop through each application and create a row in the table
+            applications.forEach(function (application) {
+                // Create a new table row
+                var row = document.createElement("tr");
+
+                // Create table data cells for each application attribute
+                var idCell = document.createElement("td");
+                idCell.textContent = application.application_id;
+                row.appendChild(idCell);
+
+                var nameCell = document.createElement("td");
+                nameCell.textContent = application.name;
+                row.appendChild(nameCell);
+
+                var emailCell = document.createElement("td");
+                emailCell.textContent = application.email;
+                row.appendChild(emailCell);
+
+                var departmentCell = document.createElement("td");
+                departmentCell.textContent = application.department;
+                row.appendChild(departmentCell);
+
+                var yearCell = document.createElement("td");
+                yearCell.textContent = application.year;
+                row.appendChild(yearCell);
+
+                var sgpaCell = document.createElement("td");
+                sgpaCell.textContent = application.sgpa;
+                row.appendChild(sgpaCell);
+
+                var preferenceCell = document.createElement("td");
+                preferenceCell.textContent = application.hostelPreference;
+                row.appendChild(preferenceCell);
+
+                var photoCell = document.createElement("td");
+                // Assuming application.photo contains the URL of the photo
+                var photo = document.createElement("img");
+                photo.src = "/"+application.photo;
+                photo.alt = "Student Photo";
+                photoCell.appendChild(photo);
+                row.appendChild(photoCell);
+
+                var statusCell = document.createElement("td");
+        // Check if the application is approved or rejected
+        if (application.status === "pending") {
+    // If pending, add buttons for approval and rejection
+    var approveButton = document.createElement("button");
+    approveButton.textContent = "Approve";
+    approveButton.className = "btn btn-success mr-2"; // Add Bootstrap classes for success button and margin
+    approveButton.addEventListener("click", function () {
+        // Call a function to handle approval
+        handleApproval(application.application_id);
+    });
+    statusCell.appendChild(approveButton);
+
+    var rejectButton = document.createElement("button");
+    rejectButton.textContent = "Reject";
+    rejectButton.className = "btn btn-danger"; // Add Bootstrap classes for danger button
+    rejectButton.addEventListener("click", function () {
+        // Call a function to handle rejection
+        handleRejection(application.application_id);
+    });
+    statusCell.appendChild(rejectButton);
+} else {
+    // If already approved or rejected, display the status
+    statusCell.textContent = application.status;
+}
+
+        row.appendChild(statusCell);
+
+        // Append the row to the table body
+                applicationTableBody.appendChild(row);
+            });
+        }
+
+
+        function handleApproval(applicationId) {
+    // Send a request to the server to update the status of the application to "approved"
+    $.ajax({
+        url: "/api/provisional-applications/" + applicationId + "/approve",
+        method: "POST",
+        success: function (response) {
+            // Reload the application data after approval
+            fetchProvisionalApplications();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error approving application:", error);
+            alert("Failed to approve application. Please try again later.");
+        }
+    });
+}
+
+// Function to handle rejection of an application
+function handleRejection(applicationId) {
+    // Send a request to the server to update the status of the application to "rejected"
+    $.ajax({
+        url: "/api/provisional-applications/" + applicationId + "/reject",
+        method: "POST",
+        success: function (response) {
+            // Reload the application data after rejection
+            fetchProvisionalApplications();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error rejecting application:", error);
+            alert("Failed to reject application. Please try again later.");
+        }
+    });
+}
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <style>
+        /* CSS for hostel registration form */
+        /* CSS for hostel registration form */
+        #hostel-registration {
+            margin-top: 12px;
+        }
+
+        #hostel-registration .card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #hostel-registration .card-header {
+            background-color: #007bff;
+            border-radius: 0;
+        }
+
+        #hostel-registration .card-body {
+            padding: 20px;
+        }
+
+        #hostel-registration h2 {
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+
+        #hostel-registration label {
+            font-weight: bold;
+        }
+
+        #hostel-registration .form-group {
+            margin-bottom: 15px;
+        }
+
+        #hostel-registration .btn-primary {
+            margin-top: 1px;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        #hostel-registration .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        #hostel-registration .invalid-feedback {
+            display: block;
+            color: #dc3545;
+        }
+
+
+        .available-room {
+            background-color: #d4edda;
+            /* Example background color for available rooms */
+        }
+
+        .unallocated-student {
+            background-color: #f8d7da;
+            /* Example background color for unallocated students */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #343a40 !important;
+            border-bottom: 1px solid #343a40;
+        }
+
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            padding-top: 60px;
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .sidebar-heading {
+            font-size: 1.2rem;
+            padding: 1rem;
+            text-align: center;
+            background-color: #212529;
+        }
+
+        .nav-link {
+            color: #adb5bd;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .section {
+            display: none;
+            /* Hide all sections by default */
+            margin-top: 20px;
+        }
+
+        .content {
+            margin-left: 250px;
+            /* Width of sidebar */
+            padding-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">
+            <%= student.student_name %> Dashboard
+        </a>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-heading">Menu</h2>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#student-details" onclick="showSection('student-details')">Profile
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" href="#hostel-registration"
+                    onclick="showSection('hostel-registration')">Apply For Hostel A.Y. 23-24
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" href="#form-status" onclick="showSection('form-status')">Application Staus
+                </a>
+            </li>
+
+            <!-- Add more navigation links here -->
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="container">
+
+            <!-- Student Details Section -->
+            <section id="student-details" class="section">
+                <h2>Student Profile</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <% if (student) { %>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Personal Information:</h3>
+                                    <p class="card-text"><strong>Name:</strong>
+                                        <%= student.student_name %>
+                                    </p>
+                                    <p class="card-text"><strong>Email:</strong>
+                                        <%= student.student_email %>
+                                    </p>
+                                    <p class="card-text"><strong>Department:</strong>
+                                        <%= student.student_department %>
+                                    </p>
+                                    <p class="card-text"><strong>Year:</strong>
+                                        <%= student.student_year %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h3 class="card-title">Academic Information:</h3>
+                                    <p class="card-text"><strong>SGPA:</strong>
+                                        <%= student.student_sgpa %>
+                                    </p>
+                                    <!-- Add more academic details here -->
+                                </div>
+                            </div>
+                            <% if (student.room_id) { %>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Room Allotment Details:</h3>
+                                        <p class="card-text"><strong>Room Number:</strong>
+                                            <%= student.room_id %>
+                                        </p>
+                                        <!-- Add more room allotment details here -->
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } else { %>
+                                        <p>No student details found.</p>
+                                        <% } %>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Add additional sections or details here -->
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Hostel Registration Form Section -->
+            <section id="hostel-registration" class="section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h4 class="mb-0" style="color: #fff;">Hostel Registration</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form id="registration-form" class="needs-validation" method="post"
+                                        action="/hostel-registration">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" name="name" required>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="department">Department</label>
+                                            <input type="text" class="form-control" id="department" name="department"
+                                                required>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="year">Year</label>
+                                            <input type="number" class="form-control" id="year" name="year" required>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="sgpa">SGPA:</label>
+                                            <input type="number" class="form-control" id="sgpa" name="sgpa" step="0.01"
+                                                min="0" max="10"
+                                                placeholder="Enter your SGPA (Semester Grade Point Average).">
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hostel-preference">Hostel Preference</label>
+                                            <select class="form-control" id="hostel-preference" name="hostelpreference"
+                                                required>
+                                                <option value="">Select Hostel Preference</option>
+                                                <option value="A">Hostel A</option>
+                                                <option value="B">Hostel B</option>
+                                                <option value="C">Hostel C</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="photo">Upload Photo</label>
+                                            <input type="file" class="form-control-file" id="photo" name="photo">
+
+                                        </div>
+
+
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="form-status" class="section">
+                <h2>Form Status</h2>
+                <% if (applicationStatus) { %>
+                    <% if (applicationStatus==='pending' ) { %>
+                        <p>Your hostel registration form status:
+                        <h3 style="padding: 10px ;border-radius:30px;background-color: orange;width: fit-content;">
+                            <%= applicationStatus %>
+                        </h3>
+                        </p>
+                        <% } else if (applicationStatus==='rejected' ) { %>
+                            <p>Your hostel registration form status:
+                            <h3 style="padding: 10px ;border-radius:30px;background-color:  red;;width: fit-content;">
+                                <%= applicationStatus %>
+                            </h3>
+                            </p>
+                            <% } else if (applicationStatus==='approved' ) { %>
+                                <p>Your hostel registration form status:
+                                <h3
+                                    style="padding: 10px ;border-radius:30px;background-color:  green;;width: fit-content;">
+                                    <%= applicationStatus %>
+                                </h3>
+                                </p>
+                                <% } %>
+                                    <% } else { %>
+                                        <p>No hostel registration form submitted yet.</p>
+                                        <% } %>
+            </section>
+
+
+
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function (section) {
+                section.style.display = 'none';
+            });
+
+            // Show the selected section
+            var selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
